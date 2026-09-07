@@ -13,7 +13,7 @@
 
   // Ambient falling petals from the reference entry screen.
   if(entryPetals && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    const petalCount = window.matchMedia('(max-width: 600px)').matches ? 18 : 24;
+    const petalCount = window.matchMedia('(max-width: 600px)').matches ? 10 : 18;
     const petals = document.createDocumentFragment();
     for(let i = 0; i < petalCount; i++){
       const petal = document.createElement('i');
@@ -80,6 +80,7 @@
   function backToCover(){
     mainContent.classList.remove('show');
     heroSection.classList.remove('hero-animate');
+    if(heroVideo) heroVideo.pause();
 
     setTimeout(()=>{
       bodyEl.classList.add('locked');
@@ -108,6 +109,16 @@
         document.addEventListener('touchstart', resume, {once:true});
       });
     }
+  }
+
+  // Do not keep decoding the large hero video after it leaves the viewport.
+  if(heroVideo && 'IntersectionObserver' in window){
+    const heroVideoObserver = new IntersectionObserver((entries)=>{
+      const isVisible = entries[0] && entries[0].isIntersecting;
+      if(isVisible && mainContent.classList.contains('show')) tryPlayHeroVideo();
+      else heroVideo.pause();
+    }, { rootMargin:'120px 0px', threshold:0 });
+    heroVideoObserver.observe(heroSection);
   }
 
   // ---------- Scratch reveal on the complete countdown card ----------
@@ -312,8 +323,15 @@
 
     function updateProgramRoute(){
       const rect = section.getBoundingClientRect();
-      const routeRect = route.ownerSVGElement.getBoundingClientRect();
       const viewport = window.innerHeight;
+
+      // Skip SVG geometry work while the program is far outside the viewport.
+      if(rect.bottom < -120 || rect.top > viewport + 120){
+        ticking = false;
+        return;
+      }
+
+      const routeRect = route.ownerSVGElement.getBoundingClientRect();
       const distance = rect.height + viewport * .5;
       const progress = Math.min(1, Math.max(0, (viewport * .75 - rect.top) / distance));
       const travelled = routeLength * progress;
@@ -542,3 +560,19 @@
     if(entries.some((entry)=> entry.isIntersecting)) openWishReminder();
   }, { threshold:0.35 });
   reminderObserver.observe(footer);
+
+  // Butterfly effect adapted from the supplied demo.
+  document.addEventListener('pointerdown', (event)=>{
+    if(!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+    for(let index = 0; index < 4; index += 1){
+      const butterfly = document.createElement('span');
+      butterfly.className = 'butterfly';
+      butterfly.textContent = '🦋';
+      butterfly.style.left = `${event.clientX - 10 + Math.random() * 30}px`;
+      butterfly.style.top = `${event.clientY - 10 + Math.random() * 30}px`;
+      butterfly.style.animationDelay = `${index * .15}s`;
+      document.body.appendChild(butterfly);
+      setTimeout(()=> butterfly.remove(), 4500);
+    }
+  }, { passive:true });

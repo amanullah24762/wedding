@@ -1228,6 +1228,10 @@
     color:var(--paper);
     border-block:1px solid var(--line);
   }
+  .program-section .head{
+    position:relative;
+    margin-bottom:0;
+  }
   .program-section .head .eyebrow{ color:var(--sky); }
   .program-section .head h2{ color:var(--paper); font-size:clamp(2.7rem, 7vw, 5rem); }
   .program-section .head::after{
@@ -1237,12 +1241,20 @@
     height:2px;
     margin:30px auto 0;
     background:linear-gradient(90deg, transparent, var(--sky), transparent);
+    filter:drop-shadow(0 0 4px rgba(69,198,239,.8)) drop-shadow(0 0 10px rgba(31,166,221,.55));
+    position:relative;
+    z-index:2;
+    animation:programHeaderLineGlow 2.2s ease-in-out infinite;
+  }
+  @keyframes programHeaderLineGlow{
+    0%,100%{ opacity:.8; filter:drop-shadow(0 0 3px rgba(69,198,239,.65)) drop-shadow(0 0 7px rgba(31,166,221,.4)); }
+    50%{ opacity:1; filter:drop-shadow(0 0 5px rgba(157,229,255,.95)) drop-shadow(0 0 13px rgba(31,166,221,.72)); }
   }
   .program-timeline{
     position:relative;
     max-width:1040px;
     min-height:1480px;
-    margin:30px auto 0;
+    margin:0 auto;
   }
   .program-route{
     position:absolute;
@@ -1508,7 +1520,7 @@
     .program-section .wrap{ padding-inline:18px; }
     .program-timeline{
       padding-left:28px;
-      margin-top:12px;
+      margin-top:0;
     }
     .program-route{
       left:0;
@@ -1554,7 +1566,8 @@
   @media(prefers-reduced-motion:reduce){
     .timeline-event, .timeline-card, .timeline-icon{ transition:none !important; }
     .program-route-traveler-halo{ animation:none; }
-    .program-route-progress{ animation:none; }
+    .program-route-progress,
+    .program-section .head::after{ animation:none; }
   }
 
   /* ---------- RSVP ---------- */
@@ -2467,6 +2480,8 @@
     height:100%;
     object-fit:cover;
     z-index:0;
+    transform:translateZ(0);
+    backface-visibility:hidden;
   }
   .hero-overlay{
     position:absolute;
@@ -2721,7 +2736,7 @@
     .program-timeline{
       padding-left:0;
       max-width:390px;
-      margin:12px auto 0;
+      margin:0 auto;
     }
     .program-route{
       left:0;
@@ -3197,8 +3212,6 @@
     }
   }
   @media(max-width:760px){
-    .program-route-progress,
-    .program-route-traveler-halo,
     .fam-avatar,
     .rsvp-ornament,
     footer .f-ornament{ animation:none!important; }
@@ -3206,11 +3219,31 @@
     .reveal-stagger > *,
     .families.reveal-stagger > .fam,
     .families.reveal-stagger > .divider-orn{ filter:none; }
-    .program-route-progress{ filter:drop-shadow(0 0 4px rgba(31,166,221,.45)); }
   }
   @media(hover:none){
     .fam:hover,
     .timeline-card:hover,
     .venue-times .pill:hover,
     .submit-btn:hover{ transform:none; }
+  }
+
+  /* Butterfly flight from the supplied interaction demo. */
+  .butterfly{
+    position:fixed;
+    z-index:10000;
+    pointer-events:none;
+    font-size:25px;
+    line-height:1;
+    filter:drop-shadow(0 1px 2px rgba(0,48,76,.4)) drop-shadow(0 0 4px rgba(255,255,255,.9));
+    will-change:transform,opacity;
+    backface-visibility:hidden;
+    animation:butterfly 4s ease-in-out forwards;
+  }
+  @keyframes butterfly{
+    0%{ transform:translate(0,30px); opacity:0; }
+    20%{ opacity:1; }
+    100%{ transform:translate(150px,-130px) rotate(15deg); opacity:0; }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .butterfly{ display:none; }
   }
