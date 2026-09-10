@@ -562,17 +562,42 @@
   reminderObserver.observe(footer);
 
   // Butterfly effect adapted from the supplied demo.
-  document.addEventListener('pointerdown', (event)=>{
-    if(!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  // document.addEventListener('pointerdown', (event)=>{
+  //   if(!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
 
-    for(let index = 0; index < 4; index += 1){
-      const butterfly = document.createElement('span');
-      butterfly.className = 'butterfly';
-      butterfly.textContent = '🦋';
-      butterfly.style.left = `${event.clientX - 10 + Math.random() * 30}px`;
-      butterfly.style.top = `${event.clientY - 10 + Math.random() * 30}px`;
-      butterfly.style.animationDelay = `${index * .15}s`;
-      document.body.appendChild(butterfly);
-      setTimeout(()=> butterfly.remove(), 4500);
-    }
-  }, { passive:true });
+  //   for(let index = 0; index < 4; index += 1){
+  //     const butterfly = document.createElement('span');
+  //     butterfly.className = 'butterfly';
+  //     butterfly.textContent = '🦋';
+  //     butterfly.style.left = `${event.clientX - 10 + Math.random() * 30}px`;
+  //     butterfly.style.top = `${event.clientY - 10 + Math.random() * 30}px`;
+  //     butterfly.style.animationDelay = `${index * .15}s`;
+  //     document.body.appendChild(butterfly);
+  //     setTimeout(()=> butterfly.remove(), 4500);
+  //   }
+  // }, { passive:true });
+
+
+//   // Theme-matched butterfly click/tap effect
+// document.addEventListener('pointerdown', (event)=>{
+//   if(!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+//   for(let index = 0; index < 4; index += 1){
+//     const butterfly = document.createElement('span');
+//     butterfly.className = 'butterfly';
+
+//     const body = document.createElement('i');
+//     body.className = 'butterfly-body';
+//     butterfly.appendChild(body);
+
+//     butterfly.style.left = `${event.clientX - 10 + Math.random() * 30}px`;
+//     butterfly.style.top = `${event.clientY - 10 + Math.random() * 30}px`;
+//     butterfly.style.animationDelay = `${index * .15}s`;
+
+//     document.body.appendChild(butterfly);
+
+//     setTimeout(()=>{
+//       butterfly.remove();
+//     }, 4500);
+//   }
+// }, { passive:true });
